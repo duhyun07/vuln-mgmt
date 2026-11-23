@@ -1,0 +1,18 @@
+{
+  "hidden": false,
+  "title": "같은 서버·같은 CVE 중복 등록",
+  "submission": "register",
+  "params": {
+    "system_id": 1,
+    "cve_id": "CVE-0000-0001",
+    "software_id": 2,
+    "status": "open",
+    "assignee_id": 2,
+    "due_date": "2026-12-01",
+    "patched_at": null,
+    "updated_by": 2
+  },
+  "expect": {
+    "error": 1062
+  }
+}

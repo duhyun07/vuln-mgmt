@@ -1,0 +1,13 @@
+{
+  "hidden": false,
+  "title": "CVE 번호 형식 오류 (소문자)",
+  "submission": "cve",
+  "params": {
+    "cve_id": "cve-0000-0005",
+    "description": "[FAKE] 형식 오류",
+    "cvss_score": "5.0"
+  },
+  "expect": {
+    "error": 3819
+  }
+}

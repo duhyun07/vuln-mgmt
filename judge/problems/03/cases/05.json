@@ -1,0 +1,35 @@
+{
+  "hidden": false,
+  "title": "정상 등록 (담당자·기한 미정)",
+  "submission": "register",
+  "params": {
+    "system_id": 2,
+    "cve_id": "CVE-0000-0001",
+    "software_id": 2,
+    "status": "open",
+    "assignee_id": null,
+    "due_date": null,
+    "patched_at": null,
+    "updated_by": null
+  },
+  "expect": {
+    "check": [
+      "SELECT sv.system_id, sv.cve_id, sv.status, sv.assignee_id, sv.due_date FROM system_vulnerabilities sv WHERE sv.system_id = %(system_id)s AND sv.cve_id = %(cve_id)s",
+      "SELECT h.old_status, h.new_status, h.changed_by FROM patch_history h JOIN system_vulnerabilities sv ON sv.sv_id = h.sv_id WHERE sv.system_id = %(system_id)s AND sv.cve_id = %(cve_id)s ORDER BY h.history_id"
+    ],
+    "rows": [
+      [
+        "2",
+        "CVE-0000-0001",
+        "open",
+        null,
+        null
+      ],
+      [
+        null,
+        "open",
+        null
+      ]
+    ]
+  }
+}

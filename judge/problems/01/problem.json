@@ -1,0 +1,41 @@
+{
+  "id": 1,
+  "title": "실제 CVE 1건 적재: DB 값 = 원본 JSON 값",
+  "type": "checklist",
+  "owner": "④",
+  "prereq": [
+    0
+  ],
+  "weeks": [
+    "5주차 자료형 (DECIMAL, DATE, ENUM)",
+    "1주차 PK 조건"
+  ],
+  "statement": "새로 나온 OpenSSH 취약점 1건을 NVD·Ubuntu에서 받아 `vulnerabilities`, `cve_package_status`에 넣고, DB 값이 원본 JSON과 같은지 확인한다.",
+  "checklist": [
+    {
+      "item": "`data/raw/nvd/CVE-….json`, `data/raw/ubuntu/CVE-….json` 저장",
+      "success": "두 파일이 있고 열면 같은 cve_id"
+    },
+    {
+      "item": "`vulnerabilities` 1행: cve_id, cvss_score, cvss_version, cvss_source, published_date, ubuntu_priority",
+      "success": "원본 JSON의 값과 글자 하나까지 같음, 없는 값은 NULL (0 아님)"
+    },
+    {
+      "item": "`cve_package_status`: noble → `24.04`, jammy → `22.04`로 변환된 행",
+      "success": "ubuntu_release에 코드명(noble)이 없음, released 행은 fixed_version 있음"
+    },
+    {
+      "item": "`python data/validate_db.py`",
+      "success": "해당 CVE가 \"일치\""
+    },
+    {
+      "item": "`docs/data_validation.md`에 한 줄 기록",
+      "success": "CVE, 일치 여부, CVSS 출처"
+    }
+  ],
+  "notes": [
+    "Ubuntu JSON의 `noble`을 그대로 넣으면 CHECK 오류 3819가 나요. DB에는 `24.04`.",
+    "CVSS가 없으면 NULL. 0점은 \"안전\"으로 오해돼요."
+  ],
+  "reset": "실제 데이터 적재 전 상태: schema.sql만 다시 실행 (seed는 넣지 않음)"
+}

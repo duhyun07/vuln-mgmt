@@ -1,0 +1,81 @@
+{
+  "id": 3,
+  "title": "조치 건 등록과 무결성 (실패해야 정답)",
+  "type": "error",
+  "owner": "①④",
+  "prereq": [
+    0
+  ],
+  "weeks": [
+    "1주차 PK 조건(유일)",
+    "6주차 FK·NOT NULL",
+    "12주차 이상 현상"
+  ],
+  "statement": "영향받는 서버에 조치 건을 등록하는 INSERT와, CVE를 등록하는 INSERT를 작성한다. 정상 데이터는 들어가야 하고, 잘못된 데이터는 DB 제약조건이 막아야 한다. 막혔을 때 나오는 MySQL 오류 코드가 채점 기준이다.",
+  "input": "제출 파일 2개.\n`sql/q03_register.sql`: `system_vulnerabilities`에 1행 INSERT. 파라미터 8개를 이 순서로 `%s`: system_id, cve_id, software_id, status, assignee_id, due_date, patched_at, updated_by\n`sql/q03_cve.sql`: `vulnerabilities`에 1행 INSERT. 파라미터 3개를 이 순서로 `%s`: cve_id, description, cvss_score",
+  "output": "케이스마다 \"성공\" 또는 MySQL 오류 코드. 성공하면 채점기가 등록된 행과 patch_history를 확인한다.",
+  "limits": [
+    "값을 SQL에 직접 쓰지 말고 `%s` 파라미터만 사용",
+    "한 파일에 SQL 문장 하나"
+  ],
+  "submissions": {
+    "register": "sql/q03_register.sql",
+    "cve": "sql/q03_cve.sql"
+  },
+  "check_columns": [
+    [
+      "system_id",
+      "cve_id",
+      "status",
+      "assignee_id",
+      "due_date"
+    ],
+    [
+      "old_status",
+      "new_status",
+      "changed_by"
+    ]
+  ],
+  "params": {
+    "register": [
+      "system_id",
+      "cve_id",
+      "software_id",
+      "status",
+      "assignee_id",
+      "due_date",
+      "patched_at",
+      "updated_by"
+    ],
+    "cve": [
+      "cve_id",
+      "description",
+      "cvss_score"
+    ]
+  },
+  "ordered": true,
+  "display": {
+    "systems": [
+      "system_id",
+      "hostname"
+    ],
+    "installed_software": [
+      "system_id",
+      "software_id"
+    ],
+    "system_vulnerabilities": [
+      "sv_id",
+      "system_id",
+      "cve_id",
+      "software_id",
+      "status"
+    ]
+  },
+  "notes": [
+    "dev-01에는 OpenSSH(software_id 2)만 설치돼 있어요. Apache 취약점은 등록할 수 없어야 해요 (복합 FK).",
+    "같은 서버에 같은 CVE를 두 번 등록하면 안 돼요. 6주차 `likes` 중복 좋아요 문제와 같은 상황이에요.",
+    "`patched`인데 완료 시각이 없으면 CHECK가 막아요.",
+    "`cve-0000-0004`처럼 소문자로 써도 막혀야 해요. 이 DB는 대소문자를 구분하지 않는 콜레이션이지만 CHECK는 구분해요."
+  ],
+  "reset": "채점기는 케이스마다 ROLLBACK해서 DB를 바꾸지 않아요. 직접 실험하다 데이터가 바뀌었으면 schema·seed 다시 적재 (공통 가이드의 명령, Plan B는 Workbench에서 schema.sql → seed.sql 실행)"
+}

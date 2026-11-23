@@ -1,0 +1,11 @@
+{
+  "hidden": false,
+  "expect": {
+    "rows": [
+      [
+        "web-01",
+        "3"
+      ]
+    ]
+  }
+}

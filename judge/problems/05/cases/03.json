@@ -1,0 +1,9 @@
+{
+  "hidden": true,
+  "params": {
+    "base_date": "2026-11-25"
+  },
+  "expect": {
+    "rows": []
+  }
+}

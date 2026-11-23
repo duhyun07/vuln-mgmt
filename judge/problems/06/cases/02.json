@@ -1,0 +1,14 @@
+{
+  "hidden": false,
+  "title": "6-2 집계 단위",
+  "submission": "units",
+  "expect": {
+    "rows": [
+      [
+        "3",
+        "2",
+        "2"
+      ]
+    ]
+  }
+}

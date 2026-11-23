@@ -8,3 +8,6 @@ venv/
 .idea/
 .vscode/
 *.log
+
+# 채점기 검증용 정답 SQL (커밋 금지)
+judge/solutions/

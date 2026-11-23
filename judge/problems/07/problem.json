@@ -1,0 +1,48 @@
+{
+  "id": 7,
+  "title": "평균보다 미해결이 많은 서버 (HAVING + 서브쿼리)",
+  "type": "result",
+  "draft": true,
+  "owner": "②",
+  "prereq": [
+    6
+  ],
+  "weeks": [
+    "10주차 GROUP BY·HAVING",
+    "11주차 FROM절·HAVING절 서브쿼리",
+    "7주차 LEFT JOIN"
+  ],
+  "statement": "서버별 미해결(`open`, `in_progress`) 조치 건수를 구하고, 그 건수가 \"모든 서버의 미해결 건수 평균\"보다 많은 서버를 찾는다. 평균에는 미해결이 0건인 서버도 포함한다.",
+  "input": "`sql/q07.sql`: SELECT 문 1개. 파라미터 없음.",
+  "output": "`hostname, unresolved_count`. `unresolved_count` 내림차순, 같으면 `hostname` 오름차순.",
+  "limits": [
+    "평균은 서브쿼리로 계산 (숫자를 직접 쓰지 않기)"
+  ],
+  "submissions": {
+    "main": "sql/q07.sql"
+  },
+  "params": {},
+  "ordered": true,
+  "columns": [
+    "hostname",
+    "unresolved_count"
+  ],
+  "display": {
+    "systems": [
+      "system_id",
+      "hostname"
+    ],
+    "system_vulnerabilities": [
+      "sv_id",
+      "system_id",
+      "cve_id",
+      "status"
+    ]
+  },
+  "notes": [
+    "예제: web-01 3, web-02 1, db-01 1, dev-01 0 → 평균 5/4 = 1.25 → web-01만.",
+    "0건 서버를 빼고 평균을 내면(5/3) 숨은 케이스에서 틀려요. 서버 목록은 `systems`에서 시작해야 해요.",
+    "patched, risk_accepted는 미해결이 아니에요."
+  ],
+  "reset": "채점기는 케이스마다 ROLLBACK해서 DB를 바꾸지 않아요. 직접 실험하다 데이터가 바뀌었으면 schema·seed 다시 적재 (공통 가이드의 명령, Plan B는 Workbench에서 schema.sql → seed.sql 실행)"
+}

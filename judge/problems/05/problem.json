@@ -1,0 +1,58 @@
+{
+  "id": 5,
+  "title": "기한을 넘긴 미해결 조치 건",
+  "type": "result",
+  "draft": true,
+  "owner": "②",
+  "prereq": [
+    0
+  ],
+  "weeks": [
+    "3주차 WHERE·AND/OR",
+    "4주차 IN",
+    "5주차 DATE",
+    "7주차 JOIN",
+    "10주차 ORDER BY"
+  ],
+  "statement": "기준일이 주어졌을 때, 조치 기한(`due_date`)이 기준일보다 이전이고 `status`가 `open` 또는 `in_progress`인 조치 건을 찾는다. 기한이 NULL이면 기한 초과가 아니다.",
+  "input": "`sql/q05.sql`: SELECT 문 1개. 파라미터 1개 `%s` = 기준일 (예: '2026-11-25').",
+  "output": "`hostname, cve_id, due_date`. `due_date` 오름차순, 같으면 `hostname` 오름차순.",
+  "limits": [
+    "`CURDATE()`/`NOW()` 금지 — 기준일은 파라미터로만",
+    "`%s` 파라미터 사용"
+  ],
+  "submissions": {
+    "main": "sql/q05.sql"
+  },
+  "params": {
+    "main": [
+      "base_date"
+    ]
+  },
+  "ordered": true,
+  "columns": [
+    "hostname",
+    "cve_id",
+    "due_date"
+  ],
+  "display": {
+    "systems": [
+      "system_id",
+      "hostname"
+    ],
+    "system_vulnerabilities": [
+      "sv_id",
+      "system_id",
+      "cve_id",
+      "status",
+      "due_date"
+    ]
+  },
+  "notes": [
+    "sv 2는 기한이 지났지만 `patched`라서 빠져요.",
+    "sv 4는 기한이 NULL이라 기한 초과가 아니에요.",
+    "sv 5는 `risk_accepted`(위험 수용)라 미해결이 아니에요. `status <> 'patched'`로 쓰면 여기서 틀려요.",
+    "기한이 기준일과 같은 날이면 아직 초과가 아니에요 (보다 \"이전\")."
+  ],
+  "reset": "채점기는 케이스마다 ROLLBACK해서 DB를 바꾸지 않아요. 직접 실험하다 데이터가 바뀌었으면 schema·seed 다시 적재 (공통 가이드의 명령, Plan B는 Workbench에서 schema.sql → seed.sql 실행)"
+}

@@ -1,0 +1,122 @@
+{
+  "id": 2,
+  "title": "가상 서버·설치 패키지 생성 (seed 고정 시 개수 일치)",
+  "type": "state",
+  "owner": "④",
+  "prereq": [
+    0,
+    1
+  ],
+  "weeks": [
+    "6주차 FK·N:M 중간 테이블",
+    "4주차 COUNT",
+    "10주차 GROUP BY",
+    "11주차 NOT EXISTS"
+  ],
+  "statement": "`python data/generate_synthetic.py --mode demo`로 시연용 서버 6대와 설치 패키지를 만든다. random seed를 고정했으므로 누가 실행해도 아래 개수가 정확히 나와야 한다.",
+  "input": "없음. 실제 데이터(software, vulnerabilities, cve_package_status)를 적재한 DB에서 생성기를 실행한 뒤 채점한다.",
+  "output": "채점기가 아래 확인 쿼리를 실행해 기대값과 비교한다.",
+  "limits": [
+    "설치 버전(`installed_version`)은 지어내지 않고 `cve_package_status.fixed_version`에 있는 값 중에서 고른다.",
+    "ubuntu_release는 코드명이 아니라 `24.04`."
+  ],
+  "checks": [
+    {
+      "name": "서버 6대",
+      "sql": "SELECT COUNT(*) FROM systems",
+      "rows": [
+        [
+          "6"
+        ]
+      ]
+    },
+    {
+      "name": "서버 이름",
+      "sql": "SELECT hostname FROM systems",
+      "rows": [
+        [
+          "web-prod-01"
+        ],
+        [
+          "web-prod-02"
+        ],
+        [
+          "web-stg-01"
+        ],
+        [
+          "db-prod-01"
+        ],
+        [
+          "dev-01"
+        ],
+        [
+          "dev-02"
+        ]
+      ]
+    },
+    {
+      "name": "환경별 대수",
+      "sql": "SELECT CAST(environment AS CHAR), COUNT(*) FROM systems GROUP BY environment",
+      "rows": [
+        [
+          "prod",
+          "3"
+        ],
+        [
+          "staging",
+          "1"
+        ],
+        [
+          "dev",
+          "2"
+        ]
+      ]
+    },
+    {
+      "name": "모든 서버 24.04",
+      "sql": "SELECT COUNT(*) FROM systems WHERE ubuntu_release <> '24.04'",
+      "rows": [
+        [
+          "0"
+        ]
+      ]
+    },
+    {
+      "name": "소프트웨어별 설치 서버 수",
+      "sql": "SELECT s.source_package, COUNT(*) FROM installed_software i JOIN software s ON s.software_id = i.software_id GROUP BY s.source_package",
+      "rows": [
+        [
+          "apache2",
+          "4"
+        ],
+        [
+          "openssh",
+          "6"
+        ]
+      ]
+    },
+    {
+      "name": "설치 버전이 실제 수정 버전 중 하나",
+      "sql": "SELECT COUNT(*) FROM installed_software i WHERE NOT EXISTS (SELECT 1 FROM cve_package_status c WHERE c.software_id = i.software_id AND c.fixed_version = i.installed_version)",
+      "rows": [
+        [
+          "0"
+        ]
+      ]
+    },
+    {
+      "name": "담당자 4명",
+      "sql": "SELECT COUNT(*) FROM staff",
+      "rows": [
+        [
+          "4"
+        ]
+      ]
+    }
+  ],
+  "notes": [
+    "\"설치 버전이 실제 수정 버전 중 하나\"가 0이 아니면 버전을 지어낸 거예요.",
+    "환경별 대수: prod 3, staging 1, dev 2. 서버 이름까지 맞아야 ③의 시연 시나리오가 그대로 동작해요."
+  ],
+  "reset": "schema.sql → `python data/load_db.py` → `python data/generate_synthetic.py --mode demo` (생성기는 실행할 때마다 가상 데이터 테이블을 비우고 다시 만들어요)"
+}

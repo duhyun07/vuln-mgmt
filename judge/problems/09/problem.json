@@ -1,0 +1,48 @@
+{
+  "id": 9,
+  "title": "인덱스 전후 EXPLAIN 비교 (type, key, rows)",
+  "type": "checklist",
+  "owner": "②④",
+  "prereq": [
+    2,
+    5
+  ],
+  "weeks": [
+    "7주차 EXPLAIN (type, key, rows=추정치)",
+    "12주차 CREATE INDEX, PK·FK·UK 자동 인덱스"
+  ],
+  "statement": "대량 가상 데이터에서 인덱스가 없는 일반 컬럼으로 거르는 쿼리를 골라, 인덱스를 추가하기 전과 후의 EXPLAIN과 실행 시간을 비교한다.",
+  "checklist": [
+    {
+      "item": "④: `python data/generate_synthetic.py --mode bench --servers 20000` 후 `SELECT COUNT(*) FROM system_vulnerabilities;`",
+      "success": "수만 행"
+    },
+    {
+      "item": "`ANALYZE TABLE system_vulnerabilities;`",
+      "success": "Msg_text = OK"
+    },
+    {
+      "item": "인덱스 없이 #5 쿼리(또는 같은 조건의 COUNT)에 EXPLAIN",
+      "success": "type = ALL, key = NULL"
+    },
+    {
+      "item": "`CREATE INDEX idx_sv_status_due ON system_vulnerabilities (status, due_date);` 후 다시 EXPLAIN",
+      "success": "type = range, key = idx_sv_status_due, rows가 크게 줄어듦"
+    },
+    {
+      "item": "`python sql/benchmark.py`로 전후 평균 시간",
+      "success": "after가 before보다 짧음, 20회 이상 평균"
+    },
+    {
+      "item": "`docs/performance.md`에 표 기록",
+      "success": "데이터 크기, MySQL 버전, type/key/rows, 평균 ms"
+    }
+  ],
+  "notes": [
+    "FK·UNIQUE 컬럼(system_id, cve_id, assignee_id 등)에는 이미 인덱스가 있어서 전후 차이가 안 나요. `cvss_score`, `status`, `due_date` 같은 일반 컬럼으로 실험하세요.",
+    "후보 목록은 vuln-mgmt `docs/design_decisions.md` §6.",
+    "`rows`는 추정치예요. 실제 시간은 `EXPLAIN ANALYZE`나 여러 번 잰 평균으로 비교해요.",
+    "실험한 인덱스는 내 로컬 DB에서만. 스키마 반영은 ①이 결정해요."
+  ],
+  "reset": "인덱스 삭제: `DROP INDEX idx_sv_status_due ON system_vulnerabilities;` → 시연용으로 되돌리기: `python data/generate_synthetic.py --mode demo`"
+}

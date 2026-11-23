@@ -1,0 +1,32 @@
+{
+  "hidden": true,
+  "params": {
+    "sv_id": 1,
+    "new_status": "risk_accepted",
+    "staff_id": 3,
+    "changed_at": "2026-11-25 15:30:00"
+  },
+  "expect": {
+    "check": [
+      "SELECT old_status, new_status, changed_by FROM patch_history WHERE sv_id = %(sv_id)s ORDER BY history_id",
+      "SELECT status, patched_at, updated_by FROM system_vulnerabilities WHERE sv_id = %(sv_id)s"
+    ],
+    "rows": [
+      [
+        null,
+        "open",
+        null
+      ],
+      [
+        "open",
+        "risk_accepted",
+        "3"
+      ],
+      [
+        "risk_accepted",
+        null,
+        "3"
+      ]
+    ]
+  }
+}

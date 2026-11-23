@@ -1,0 +1,58 @@
+{
+  "id": 6,
+  "title": "서버별 패치 완료율 + 집계 단위 구분",
+  "type": "result",
+  "draft": true,
+  "owner": "②",
+  "prereq": [
+    5
+  ],
+  "weeks": [
+    "4주차 COUNT·DISTINCT·NULL과 COUNT",
+    "7주차 LEFT JOIN",
+    "10주차 GROUP BY·ORDER BY"
+  ],
+  "statement": "(6-1) 서버마다 전체 조치 건수, `patched` 건수, 완료율을 구한다. 조치 건이 하나도 없는 서버도 나와야 한다.\n(6-2) 미해결(`open`, `in_progress`) 조치 건에 대해 \"조치 건 수\", \"서로 다른 CVE 수\", \"영향받는 서버 수\"를 한 행으로 구한다.",
+  "input": "제출 파일 2개, 파라미터 없음.\n`sql/q06_rate.sql` (6-1), `sql/q06_units.sql` (6-2)",
+  "output": "6-1: `hostname, total_count, patched_count, patch_rate_pct`. `hostname` 오름차순. 완료율 = patched / 전체 × 100, 소수 첫째 자리 반올림(`ROUND(…, 1)`), 조치 건이 0이면 NULL. patched_count는 0이면 0(NULL 아님).\n6-2: `sv_count, cve_count, server_count` 한 행.",
+  "limits": [
+    "완료율의 분모에는 `risk_accepted`도 포함한다 (①의 뷰 `v_system_patch_rate`와 같은 정의, 회의에서 바뀔 수 있음)"
+  ],
+  "submissions": {
+    "rate": "sql/q06_rate.sql",
+    "units": "sql/q06_units.sql"
+  },
+  "params": {},
+  "ordered": true,
+  "columns": {
+    "rate": [
+      "hostname",
+      "total_count",
+      "patched_count",
+      "patch_rate_pct"
+    ],
+    "units": [
+      "sv_count",
+      "cve_count",
+      "server_count"
+    ]
+  },
+  "display": {
+    "systems": [
+      "system_id",
+      "hostname"
+    ],
+    "system_vulnerabilities": [
+      "sv_id",
+      "system_id",
+      "cve_id",
+      "status"
+    ]
+  },
+  "notes": [
+    "dev-01은 조치 건이 없어요. INNER JOIN이면 사라지고, LEFT JOIN 후 `SUM(...)`만 쓰면 patched_count가 NULL이 돼요.",
+    "web-01의 risk_accepted 1건은 완료가 아니지만 분모에는 들어가요 → 1/4 = 25.0",
+    "6-2에서 CVE-0000-0001은 web-01, web-02 두 서버에 있어요. COUNT(*)는 3, 서로 다른 CVE는 2예요."
+  ],
+  "reset": "채점기는 케이스마다 ROLLBACK해서 DB를 바꾸지 않아요. 직접 실험하다 데이터가 바뀌었으면 schema·seed 다시 적재 (공통 가이드의 명령, Plan B는 Workbench에서 schema.sql → seed.sql 실행)"
+}

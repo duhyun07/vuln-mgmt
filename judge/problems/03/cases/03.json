@@ -1,0 +1,18 @@
+{
+  "hidden": false,
+  "title": "patched인데 patched_at 없음",
+  "submission": "register",
+  "params": {
+    "system_id": 1,
+    "cve_id": "CVE-0000-0002",
+    "software_id": 1,
+    "status": "patched",
+    "assignee_id": 1,
+    "due_date": "2026-12-01",
+    "patched_at": null,
+    "updated_by": 1
+  },
+  "expect": {
+    "error": 3819
+  }
+}

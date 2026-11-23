@@ -1,0 +1,12 @@
+{
+  "hidden": true,
+  "submission": "cve",
+  "params": {
+    "cve_id": "CVE-0000-0005",
+    "description": "[FAKE] 점수 범위",
+    "cvss_score": "10.5"
+  },
+  "expect": {
+    "error": 3819
+  }
+}

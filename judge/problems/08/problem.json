@@ -1,0 +1,47 @@
+{
+  "id": 8,
+  "title": "앱 화면 숫자 = 해당 쿼리 결과",
+  "type": "checklist",
+  "owner": "③",
+  "prereq": [
+    4,
+    5,
+    6
+  ],
+  "weeks": [
+    "2주차 UPDATE",
+    "4주차 COUNT"
+  ],
+  "statement": "seed를 막 적재한 DB에서 Streamlit 앱을 띄우고, 화면의 숫자가 같은 SQL을 Workbench에서 직접 실행한 결과와 같은지 확인한다.",
+  "checklist": [
+    {
+      "item": "대시보드 \"미해결 조치 건\" vs `SELECT COUNT(*) FROM v_open_risks;`",
+      "success": "둘 다 5"
+    },
+    {
+      "item": "대시보드 \"기한 초과\" vs `SELECT COUNT(*) FROM v_open_risks WHERE is_overdue = 1;`",
+      "success": "둘 다 2"
+    },
+    {
+      "item": "서버별 완료율 표 vs `SELECT * FROM v_system_patch_rate;`",
+      "success": "web-prod-01 0.0 / web-prod-02 33.3 / dev-01 100.0"
+    },
+    {
+      "item": "패치 관리 화면에서 sv 4를 in_progress로 변경 (변경자 지정)",
+      "success": "이력 표에 open → in_progress, 변경자 이름이 고른 사람"
+    },
+    {
+      "item": "변경 직후 대시보드로 이동",
+      "success": "미해결 수는 그대로 5, 캐시 때문에 옛 값이 보이지 않음"
+    },
+    {
+      "item": "분석 화면의 catalog 쿼리 결과 vs `python judge/judge.py 5`·`6`에서 쓰는 sql/qNN.sql 결과",
+      "success": "같은 SQL, 같은 행"
+    }
+  ],
+  "notes": [
+    "Workbench에서 직접 UPDATE로 확인할 때 Safe Updates 모드면 키가 아닌 컬럼 조건 UPDATE가 Error 1175로 막혀요 (2주차).",
+    "pymysql은 autocommit이 꺼져 있어서 `conn.commit()`을 안 하면 앱에서 바꾼 값이 저장되지 않아요."
+  ],
+  "reset": "schema·seed 다시 적재 (공통 가이드의 명령, Plan B는 Workbench에서 schema.sql → seed.sql 실행)"
+}

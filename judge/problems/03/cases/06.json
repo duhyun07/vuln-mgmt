@@ -1,0 +1,17 @@
+{
+  "hidden": true,
+  "submission": "register",
+  "params": {
+    "system_id": 1,
+    "cve_id": "CVE-0000-0099",
+    "software_id": 1,
+    "status": "open",
+    "assignee_id": 1,
+    "due_date": "2026-12-01",
+    "patched_at": null,
+    "updated_by": 1
+  },
+  "expect": {
+    "error": 1452
+  }
+}

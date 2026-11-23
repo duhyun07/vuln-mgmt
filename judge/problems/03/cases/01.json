@@ -1,0 +1,18 @@
+{
+  "hidden": false,
+  "title": "설치 안 된 소프트웨어",
+  "submission": "register",
+  "params": {
+    "system_id": 2,
+    "cve_id": "CVE-0000-0002",
+    "software_id": 1,
+    "status": "open",
+    "assignee_id": null,
+    "due_date": "2026-12-01",
+    "patched_at": null,
+    "updated_by": null
+  },
+  "expect": {
+    "error": 1452
+  }
+}
