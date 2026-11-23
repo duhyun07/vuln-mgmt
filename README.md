@@ -17,6 +17,8 @@ tests/run_tests.sh        테스트 실행기 (PASS/FAIL 출력)
 docs/erd.md               ERD (Mermaid)
 docs/db_dictionary.md     데이터 사전 — 팀 공통 연동 규격
 docs/design_decisions.md  설계 결정과 검토할 사항, 추천 인덱스
+judge/                    문제 채점기 (python judge/judge.py 5) — 문제 설명은 팀 사이트
+AGENTS.md                 AI 도구용 작업 규칙
 sql/  data/  app/         분석 SQL / 수집 데이터 / Streamlit 앱 (각 담당)
 ```
 
@@ -56,12 +58,22 @@ docker compose exec db sh -c \
 각 테스트는 트랜잭션 안에서 실행 후 ROLLBACK되므로 데이터가 바뀌지 않는다(실행 후 자동 검사).
 모두 통과하면 `총 23건: PASS 23, FAIL 0`과 종료 코드 0.
 
-### 4. 접속
+### 4. 채점 (문제 풀이 확인)
+
+```bash
+pip install -r judge/requirements.txt
+python judge/judge.py --list
+python judge/judge.py 5
+```
+
+케이스마다 트랜잭션 안에서 실행하고 ROLLBACK하므로 데이터가 바뀌지 않는다. 자세한 내용은 [judge/README.md](judge/README.md).
+
+### 5. 접속
 
 | 항목 | 값 |
 |---|---|
 | host | `127.0.0.1` (컨테이너끼리는 `db`) |
-| port | `3306` |
+| port | `.env`의 `MYSQL_PORT` (기본 `3306`. 수업용 MySQL이 3306을 쓰고 있으면 `3307`로 바꾸고 `docker compose up -d`) |
 | database | `vuln_mgmt` |
 | user / password | `.env`의 `MYSQL_USER` / `MYSQL_PASSWORD` |
 
